@@ -1,61 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AdiXfusion Code Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mobile Coding IDE</title>
 
 <style>
 
 body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-text-align:center;
 margin:0;
-padding:20px;
-}
-
-h1{
-color:#38bdf8;
-}
-
-.editor{
+background:#0d1117;
+color:white;
+font-family:monospace;
 display:flex;
 flex-direction:column;
-align-items:center;
-gap:20px;
+height:100vh;
+}
+
+.header{
+background:#161b22;
+padding:10px;
+text-align:center;
+font-size:18px;
 }
 
 textarea{
-width:95%;
-height:400px;
-border-radius:8px;
-padding:15px;
-font-size:16px;
-resize:vertical;
+flex:1;
+background:#0d1117;
+color:#00ff9c;
 border:none;
 outline:none;
+padding:12px;
+font-size:14px;
+resize:none;
 }
 
-button{
-padding:12px 25px;
-background:#38bdf8;
-border:none;
-border-radius:6px;
-font-weight:bold;
+.keys{
+display:flex;
+overflow-x:auto;
+background:#161b22;
+padding:5px;
+}
+
+.key{
+min-width:40px;
+text-align:center;
+padding:8px;
+margin:3px;
+background:#30363d;
+border-radius:5px;
 cursor:pointer;
-font-size:16px;
 }
 
-button:hover{
-background:#0ea5e9;
+.key:active{
+background:red;
+}
+
+.run{
+padding:12px;
+background:#ff0033;
+border:none;
+color:white;
+font-size:16px;
 }
 
 iframe{
-width:95%;
-height:500px;
-background:white;
-border-radius:8px;
+height:40%;
 border:none;
+background:white;
 }
 
 </style>
@@ -64,33 +76,66 @@ border:none;
 
 <body>
 
-<h1>AdiXfusion Live Code Editor</h1>
+<div class="header">💻 Mobile Coding IDE</div>
 
-<div class="editor">
+<textarea id="code" placeholder="Write your code here..."></textarea>
 
-<textarea id="code">
-<!DOCTYPE html>
-<html>
-<body>
+<div class="keys">
 
-<h2>Hello AdiXfusion</h2>
-<p>Write your HTML code here</p>
-
-</body>
-</html>
-</textarea>
-
-<button onclick="runCode()">Run Code</button>
-
-<iframe id="preview"></iframe>
+<div class="key" onclick="add('<')">&lt;</div>
+<div class="key" onclick="add('>')">&gt;</div>
+<div class="key" onclick="add('/')">/</div>
+<div class="key" onclick="add('{')">{</div>
+<div class="key" onclick="add('}')">}</div>
+<div class="key" onclick="add('(')">(</div>
+<div class="key" onclick="add(')')">)</div>
+<div class="key" onclick="add(';')">;</div>
+<div class="key" onclick="add('=')">=</div>
+<div class="key" onclick="add('+')">+</div>
+<div class="key" onclick="add('-')">-</div>
+<div class="key" onclick="add('*')">*</div>
+<div class="key" onclick="add('"')">"</div>
+<div class="key" onclick="add(''' )">'</div>
 
 </div>
 
+<button class="run" onclick="run()">▶ Run Code</button>
+
+<iframe id="output"></iframe>
+
 <script>
-function runCode(){
-var code=document.getElementById("code").value;
-document.getElementById("preview").srcdoc=code;
+
+function add(symbol){
+
+let textarea=document.getElementById("code");
+
+let start=textarea.selectionStart;
+let end=textarea.selectionEnd;
+
+textarea.value=
+textarea.value.substring(0,start)
++symbol+
+textarea.value.substring(end);
+
+textarea.focus();
+
+textarea.selectionStart=start+1;
+textarea.selectionEnd=start+1;
+
 }
+
+function run(){
+
+let code=document.getElementById("code").value;
+
+let iframe=document.getElementById("output").contentWindow.document;
+
+iframe.open();
+iframe.write(code);
+iframe.close();
+
+}
+
 </script>
 
 </body>
