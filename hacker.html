@@ -14,6 +14,12 @@ font-family:monospace;
 overflow:hidden;
 }
 
+canvas{
+position:fixed;
+top:0;
+left:0;
+}
+
 #terminal{
 position:absolute;
 top:20px;
@@ -25,22 +31,9 @@ input{
 background:black;
 border:none;
 color:#00ff00;
+font-size:16px;
 outline:none;
 font-family:monospace;
-}
-
-canvas{
-position:fixed;
-top:0;
-left:0;
-}
-
-#kali{
-position:fixed;
-top:10px;
-right:20px;
-color:#00ff00;
-opacity:0.7;
 }
 
 #flash{
@@ -51,141 +44,143 @@ width:100%;
 height:100%;
 background:red;
 opacity:0;
-z-index:5;
+pointer-events:none;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="flash"></div>
-
-<div id="kali">KALI LINUX ROOT TERMINAL</div>
-
 <canvas id="matrix"></canvas>
 
+<div id="flash"></div>
+
 <div id="terminal">
-<p>root@kali:~# <input id="cmd" autofocus></p>
+<p>root@kali:~# <input id="cmd" autocomplete="off"></p>
 <pre id="out"></pre>
 </div>
 
 <script>
 
-let c=document.getElementById("matrix");
-let ctx=c.getContext("2d");
+/* INPUT FOCUS FIX */
 
-c.height=window.innerHeight;
-c.width=window.innerWidth;
+let cmd=document.getElementById("cmd")
 
-let letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-letters=letters.split("");
+window.onload=function(){
+cmd.focus()
+}
 
-let fontSize=14;
-let columns=c.width/fontSize;
-let drops=[];
+document.body.onclick=function(){
+cmd.focus()
+}
+
+/* MATRIX */
+
+let canvas=document.getElementById("matrix")
+let ctx=canvas.getContext("2d")
+
+canvas.height=window.innerHeight
+canvas.width=window.innerWidth
+
+let letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+letters=letters.split("")
+
+let fontSize=14
+let columns=canvas.width/fontSize
+
+let drops=[]
 
 for(let x=0;x<columns;x++)
-drops[x]=1;
+drops[x]=1
 
 function draw(){
 
-ctx.fillStyle="rgba(0,0,0,0.05)";
-ctx.fillRect(0,0,c.width,c.height);
+ctx.fillStyle="rgba(0,0,0,0.05)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="#0f0";
-ctx.font=fontSize+"px monospace";
+ctx.fillStyle="#0f0"
+ctx.font=fontSize+"px monospace"
 
 for(let i=0;i<drops.length;i++){
 
-let text=letters[Math.floor(Math.random()*letters.length)];
+let text=letters[Math.floor(Math.random()*letters.length)]
 
-ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+ctx.fillText(text,i*fontSize,drops[i]*fontSize)
 
-if(drops[i]*fontSize>c.height && Math.random()>0.975)
-drops[i]=0;
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0
 
-drops[i]++;
-
-}
+drops[i]++
 
 }
 
-setInterval(draw,33);
+}
 
-let cmd=document.getElementById("cmd");
-let out=document.getElementById("out");
-let flash=document.getElementById("flash");
+setInterval(draw,33)
+
+/* TERMINAL */
+
+let out=document.getElementById("out")
+let flash=document.getElementById("flash")
+
+function randomIP(){
+return "192.168."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255)
+}
 
 cmd.addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
 
-let val=cmd.value.toLowerCase();
+let v=cmd.value.toLowerCase()
 
-if(val==="ram"){
+if(v==="ram"){
 
-out.innerHTML+="Initializing RAM exploit...\n";
+out.innerHTML+="Starting RAM exploit...\n"
 
-setTimeout(function(){
+let scan=setInterval(()=>{
 
-out.innerHTML+="Scanning network...\n";
+out.innerHTML+="Scanning "+randomIP()+" ... OPEN\n"
 
-},500);
-
-setTimeout(function(){
-
-let scan=setInterval(function(){
-
-let ip="192.168."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255);
-
-out.innerHTML+="Scanning IP "+ip+" ... OPEN\n";
-
-window.scrollTo(0,document.body.scrollHeight);
-
-},100);
-
-setTimeout(function(){
-
-clearInterval(scan);
-
-out.innerHTML+="\nACCESS GRANTED ✔\n";
-
-flash.style.opacity="0.7";
+},120)
 
 setTimeout(()=>{
-flash.style.opacity="0";
-},200);
 
-setInterval(function(){
+clearInterval(scan)
+
+out.innerHTML+="\nACCESS GRANTED ✔\n"
+
+flash.style.opacity="0.6"
+
+setTimeout(()=>{
+flash.style.opacity="0"
+},200)
+
+setInterval(()=>{
 
 out.innerHTML+=
-"Injecting payload...\n"+
 "Bypassing firewall...\n"+
 "Decrypting root password...\n"+
 "Uploading exploit...\n"+
-"Root access confirmed...\n\n";
+"Root access confirmed...\n\n"
 
-},120);
+},150)
 
-},5000);
-
-},1000);
+},4000)
 
 }
 
 else{
 
-out.innerHTML+="command not found\n";
+out.innerHTML+="command not found\n"
 
 }
 
-cmd.value="";
+cmd.value=""
 
 }
 
-});
+})
 
 </script>
 
