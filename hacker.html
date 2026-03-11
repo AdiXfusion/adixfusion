@@ -152,6 +152,26 @@ let lines=[
 "Device found : 192.168.0.1",
 "Device found : 192.168.0.12",
 "Analyzing ports...",
+"Initializing network scanner...",
+"Loading network interfaces...",
+"Detecting active connections...",
+"Scanning local subnet...",
+"Host found : 192.168.0.1",
+"Host found : 192.168.0.5",
+"Host found : 192.168.0.12",
+"Host found : 192.168.0.18",
+"Analyzing open ports...",
+"Port 21 : CLOSED",
+"Port 22 : OPEN",
+"Port 80 : OPEN",
+"Port 443 : OPEN",
+"Checking device fingerprints...",
+"Device type detected : Router",
+"Device type detected : Mobile",
+"Device type detected : Laptop",
+"Running security analysis...",
+"No critical threats detected",
+"Network scan completed successfully"
 "Port 22 open",
 "Port 80 open",
 "Port 443 open",
@@ -171,6 +191,26 @@ let lines=[
 "Testing packet filtering...",
 "Firewall status : ACTIVE",
 "Security level : HIGH 🔥🔥🔥🔥"
+"Initializing firewall diagnostics...",
+"Loading security modules...",
+"Checking inbound traffic rules...",
+"Inbound rule #21 verified...",
+"Inbound rule #34 verified...",
+"Scanning outbound traffic policies...",
+"Outbound rule #12 verified...",
+"Outbound rule #18 verified...",
+"Testing packet filtering engine...",
+"Simulating intrusion attempt...",
+"Intrusion blocked successfully...",
+"Analyzing suspicious ports...",
+"Port 21 secured",
+"Port 22 secured",
+"Port 80 secured",
+"Port 443 secured",
+"Running vulnerability scan...",
+"No critical vulnerabilities detected",
+"Firewall status : ACTIVE",
+"Security level : MAXIMUM"
 ];
 
 typeLines(lines,700);
@@ -183,7 +223,25 @@ log("Browser : "+navigator.userAgent);
 log("Platform : "+navigator.platform);
 log("Language : "+navigator.language);
 log("Online : "+navigator.onLine);
-
+"Gathering system information...",
+"Detecting operating system...",
+"OS : " + navigator.platform,
+"Browser : " + navigator.userAgent,
+"CPU cores : " + navigator.hardwareConcurrency,
+"Memory : Approx " + Math.floor(navigator.deviceMemory || 4) + " GB",
+"Language : " + navigator.language,
+"Online : " + (navigator.onLine ? "Yes" : "No"),
+"Screen resolution : " + screen.width + "x" + screen.height,
+"Color depth : " + screen.colorDepth + "-bit",
+"Time zone : " + Intl.DateTimeFormat().resolvedOptions().timeZone,
+"Geolocation : Requesting...",
+"Battery status : Fetching...",
+"Security modules : Loaded",
+"Firewall status : Active",
+"Antivirus status : Enabled",
+"Virtual environment : Not detected",
+"Disk usage : Fetching...",
+"System check complete ✔"
 }
 
 function checkPassword(){
