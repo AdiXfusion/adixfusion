@@ -2,305 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cyber Security Lab</title>
-
+<title>ADI Cyber Security Lab</title>
 <style>
-body{
-background:#000;
-color:#00ff9c;
-font-family:monospace;
-margin:0;
-overflow:hidden;
-}
-
-header{
-background:#111;
-padding:10px;
-text-align:center;
-color:#ff0033;
-font-size:22px;
-letter-spacing:2px;
-}
-
-#layout{
-display:flex;
-height:90vh;
-}
-
-#sidebar{
-width:220px;
-background:#0a0a0a;
-border-right:1px solid #222;
-padding:10px;
-}
-
-#sidebar button{
-width:100%;
-padding:10px;
-margin-bottom:8px;
-background:#111;
-color:#0f0;
-border:1px solid #222;
-cursor:pointer;
-}
-
-#main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
-
-#terminal{
-flex:1;
-padding:15px;
-overflow:auto;
-font-size:14px;
-}
-
-.progress{
-height:8px;
-background:#111;
-margin-top:4px;
-border:1px solid #333;
-}
-
-.bar{
-height:100%;
-width:0%;
-background:#00ff9c;
-transition:width .2s;
-}
-
-#passwordTool{
-padding:10px;
-border-top:1px solid #222;
-background:#050505;
-}
-
-input{
-background:black;
-color:#0f0;
-border:1px solid #333;
-padding:6px;
-}
-
-canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:-1;
-}
+body{background:#000;color:#0f9;font-family:monospace;margin:0;overflow:hidden;}
+header{background:#111;padding:10px;text-align:center;color:#f03;font-size:22px;letter-spacing:2px;}
+#layout{display:flex;height:90vh;}
+#sidebar{width:220px;background:#0a0a0a;border-right:1px solid #222;padding:10px;}
+#sidebar button{width:100%;padding:10px;margin-bottom:8px;background:#111;color:#0f0;border:1px solid #222;cursor:pointer;}
+#main{flex:1;display:flex;flex-direction:column;}
+#terminal{flex:1;padding:15px;overflow:auto;font-size:14px;}
+.progress{height:8px;background:#111;margin-top:4px;border:1px solid #333;}
+.bar{height:100%;width:0%;background:#0f9;transition:width .2s;}
+#passwordTool{padding:10px;border-top:1px solid #222;background:#050505;}
+input{background:black;color:#0f0;border:1px solid #333;padding:6px;}
+canvas{position:fixed;top:0;left:0;z-index:-1;}
 </style>
 </head>
-
 <body>
 
-<header> CYBER SECURITY TERMINAL</header>
-
+<header>ADI CYBER SECURITY TERMINAL</header>
 <canvas id="matrix"></canvas>
 
 <div id="layout">
-
-<div id="sidebar">
-<button onclick="scanNetwork()">Network Scan</button>
-<button onclick="firewallTest()">Firewall Test</button>
-<button onclick="systemInfo()">System Info</button>
-<button onclick="clearTerminal()">Clear</button>
-</div>
-
-<div id="main">
-
-<div id="terminal"></div>
-
-<div id="passwordTool">
-Password Strength Test:
-<input id="pass" oninput="checkPassword()" placeholder="type password">
-<div class="progress"><div id="bar" class="bar"></div></div>
-</div>
-
-</div>
-
+  <div id="sidebar">
+    <button onclick="run('network')">Network Scan</button>
+    <button onclick="run('firewall')">Firewall Test</button>
+    <button onclick="run('system')">System Info</button>
+    <button onclick="clearTerminal()">Clear</button>
+  </div>
+  <div id="main">
+    <div id="terminal"></div>
+    <div id="passwordTool">
+      Password Strength Test:
+      <input id="pass" oninput="checkPassword()" placeholder="type password">
+      <div class="progress"><div id="bar" class="bar"></div></div>
+    </div>
+  </div>
 </div>
 
 <script>
-
 const term=document.getElementById("terminal");
 
-function log(t){
-term.innerHTML+=t+"<br>";
-term.scrollTop=term.scrollHeight;
-}
+function log(t){term.innerHTML+=t+"<br>";term.scrollTop=term.scrollHeight;}
+function clearTerminal(){term.innerHTML="";}
 
-function clearTerminal(){
-term.innerHTML="";
-}
+function run(type){
+  let lines=[];
+  if(type=='network') lines=["Initializing scanner...","Searching devices...","Device found : 192.168.0.1","Device found : 192.168.0.12","Analyzing ports...","Port 22 open","Port 80 open","Port 443 open","Scan complete."];
+  if(type=='firewall') lines=["Running firewall diagnostics...","Checking inbound rules...","Checking outbound rules...","Testing packet filtering...","Firewall status : ACTIVE","Security level : HIGH"];
+  if(type=='system') lines=["Browser : "+navigator.userAgent,"Platform : "+navigator.platform,"Language : "+navigator.language,"Online : "+navigator.onLine];
 
-function typeLines(lines,delay=500){
-let i=0;
-let inter=setInterval(()=>{
-log(lines[i]);
-i++;
-if(i>=lines.length)clearInterval(inter);
-},delay);
-}
-
-function scanNetwork(){
-
-let lines=[
-"Initializing scanner...",
-"Searching devices...",
-"Device found : 192.168.0.1",
-"Device found : 192.168.0.12",
-"Analyzing ports...",
-"Initializing network scanner...",
-"Loading network interfaces...",
-"Detecting active connections...",
-"Scanning local subnet...",
-"Host found : 192.168.0.1",
-"Host found : 192.168.0.5",
-"Host found : 192.168.0.12",
-"Host found : 192.168.0.18",
-"Analyzing open ports...",
-"Port 21 : CLOSED",
-"Port 22 : OPEN",
-"Port 80 : OPEN",
-"Port 443 : OPEN",
-"Checking device fingerprints...",
-"Device type detected : Router",
-"Device type detected : Mobile",
-"Device type detected : Laptop",
-"Running security analysis...",
-"No critical threats detected",
-"Network scan completed successfully"
-"Port 22 open",
-"Port 80 open",
-"Port 443 open",
-"Scan complete."
-];
-
-typeLines(lines,700);
-
-}
-
-function firewallTest(){
-
-let lines=[
-"Running firewall diagnostics...",
-"Checking inbound rules...",
-"Checking outbound rules...",
-"Testing packet filtering...",
-"Firewall status : ACTIVE",
-"Security level : HIGH 🔥🔥🔥🔥"
-"Initializing firewall diagnostics...",
-"Loading security modules...",
-"Checking inbound traffic rules...",
-"Inbound rule #21 verified...",
-"Inbound rule #34 verified...",
-"Scanning outbound traffic policies...",
-"Outbound rule #12 verified...",
-"Outbound rule #18 verified...",
-"Testing packet filtering engine...",
-"Simulating intrusion attempt...",
-"Intrusion blocked successfully...",
-"Analyzing suspicious ports...",
-"Port 21 secured",
-"Port 22 secured",
-"Port 80 secured",
-"Port 443 secured",
-"Running vulnerability scan...",
-"No critical vulnerabilities detected",
-"Firewall status : ACTIVE",
-"Security level : MAXIMUM"
-];
-
-typeLines(lines,700);
-
-}
-
-function systemInfo(){
-
-log("Browser : "+navigator.userAgent);
-log("Platform : "+navigator.platform);
-log("Language : "+navigator.language);
-log("Online : "+navigator.onLine);
-"Gathering system information...",
-"Detecting operating system...",
-"OS : " + navigator.platform,
-"Browser : " + navigator.userAgent,
-"CPU cores : " + navigator.hardwareConcurrency,
-"Memory : Approx " + Math.floor(navigator.deviceMemory || 4) + " GB",
-"Language : " + navigator.language,
-"Online : " + (navigator.onLine ? "Yes" : "No"),
-"Screen resolution : " + screen.width + "x" + screen.height,
-"Color depth : " + screen.colorDepth + "-bit",
-"Time zone : " + Intl.DateTimeFormat().resolvedOptions().timeZone,
-"Geolocation : Requesting...",
-"Battery status : Fetching...",
-"Security modules : Loaded",
-"Firewall status : Active",
-"Antivirus status : Enabled",
-"Virtual environment : Not detected",
-"Disk usage : Fetching...",
-"System check complete ✔"
+  let i=0, interval=setInterval(()=>{
+    log(lines[i]);
+    i++;
+    if(i>=lines.length){clearInterval(interval);log("ACCESS GRANTED");}
+  },700);
 }
 
 function checkPassword(){
-
-let p=document.getElementById("pass").value;
-let score=0;
-
-if(p.length>5)score+=25;
-if(/[A-Z]/.test(p))score+=25;
-if(/[0-9]/.test(p))score+=25;
-if(/[^A-Za-z0-9]/.test(p))score+=25;
-
-document.getElementById("bar").style.width=score+"%";
-
+  let p=document.getElementById("pass").value, score=0;
+  if(p.length>5)score+=25;
+  if(/[A-Z]/.test(p))score+=25;
+  if(/[0-9]/.test(p))score+=25;
+  if(/[^A-Za-z0-9]/.test(p))score+=25;
+  document.getElementById("bar").style.width=score+"%";
 }
 
-
-// MATRIX EFFECT
-
-const canvas=document.getElementById("matrix");
-const ctx=canvas.getContext("2d");
-
-canvas.height=window.innerHeight;
-canvas.width=window.innerWidth;
-
-const letters="01";
-const fontSize=14;
-const columns=canvas.width/fontSize;
-
-const drops=[];
-
-for(let i=0;i<columns;i++)drops[i]=1;
+// MATRIX
+const canvas=document.getElementById("matrix"), ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+const letters="01", fontSize=14, columns=canvas.width/fontSize, drops=Array.from({length:columns},()=>1);
 
 function draw(){
-
-ctx.fillStyle="rgba(0,0,0,0.05)";
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle="#0f0";
-ctx.font=fontSize+"px monospace";
-
-for(let i=0;i<drops.length;i++){
-
-const text=letters[Math.floor(Math.random()*letters.length)];
-
-ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-drops[i]=0;
-
-drops[i]++;
-
+  ctx.fillStyle="rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#0f0"; ctx.font=fontSize+"px monospace";
+  drops.forEach((y,i)=>{
+    ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, y*fontSize);
+    drops[i] = y*fontSize>canvas.height && Math.random()>0.975 ? 0 : y+1;
+  });
 }
-
-}
-
 setInterval(draw,33);
-
 </script>
-
 </body>
 </html>
